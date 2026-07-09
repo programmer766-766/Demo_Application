@@ -31,10 +31,10 @@ public class UserService {
         }
     }
     //method is for view user profile by their given name
-    public UserProfileDto userProfile(String name){
+    public UserProfileDto userProfile(int id){
         //Fetch user into DB by their input name
-        UserEntity userEntity = userRepository.findByFullName(name).orElseThrow(() -> new
-                RuntimeException("User is not available with this name:" + name));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new
+                RuntimeException("User is not available with this name:" + id));
         //if user exists map their details into UserProfileDto
         UserProfileDto userProfileDto=new UserProfileDto();
         userProfileDto.setProfileId(userEntity.getUserId());

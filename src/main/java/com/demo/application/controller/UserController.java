@@ -22,8 +22,8 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createAnUser(addUserDto));
     }
-    @GetMapping("/profile/{name}")
-    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable String name){
-        return ResponseEntity.ok(userService.userProfile(name));
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable int id){
+        return ResponseEntity.ok(userService.userProfile(id));
     }
 }
