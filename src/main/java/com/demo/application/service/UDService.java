@@ -11,4 +11,5 @@ public interface UDService {
     ResponseEntity<UserEntity>updateUser(int id, AddUserDto addUserDto);
     ResponseEntity<UserEntity>deleteUser(int id);
     ResponseEntity<List<UserEntity>>getAllUsers();
+    public boolean existsUser(int id);
 }

@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class UserController {
+
     private final UserService userService;
+
     public UserController(UserService userService){
         this.userService=userService;
     }
+
     @PostMapping("/add-user")
     public ResponseEntity<UserEntity> addUser(@RequestBody AddUserDto addUserDto){
         if(addUserDto.getFullName()==null||addUserDto.getEmail()==null||addUserDto.getCity()==null){
