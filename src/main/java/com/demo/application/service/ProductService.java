@@ -1,13 +1,14 @@
 package com.demo.application.service;
 
 import com.demo.application.dtos.DemoProducts;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Service
 public class ProductService {
     //method for list an demo products
     private List<DemoProducts> listDemoProducts(){
