@@ -7,7 +7,9 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class DemoProducts {
+
     private Integer productId;
+
     private String productName;
     private Double productPrice;
     private LocalDate releaseDate;

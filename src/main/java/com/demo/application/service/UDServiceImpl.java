@@ -4,6 +4,8 @@ import com.demo.application.dtos.AddUserDto;
 import com.demo.application.entity.UserEntity;
 import com.demo.application.repo.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
+@Getter
 public class UDServiceImpl implements UDService{
 
     private UserRepository userRepository;
@@ -40,5 +43,10 @@ public class UDServiceImpl implements UDService{
     @Override
     public ResponseEntity<List<UserEntity>> getAllUsers() {
         return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+    }
+
+    @Override
+    public boolean existsUser(int id) {
+        return userRepository.existsById(id);
     }
 }
