@@ -12,17 +12,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ConfigSecurity {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http){
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth->auth
-                                .requestMatchers(HttpMethod.GET,"/api/profile/*").authenticated()
-                                .requestMatchers("/api/ud/**").authenticated()
-                                .requestMatchers(HttpMethod.POST,"/api/add-user").permitAll()
                                 .requestMatchers("/").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/ud/").hasRole("ADMIN").anyRequest().authenticated()
-                                .requestMatchers(HttpMethod.GET,"/api/ud/").hasRole("ADMIN").anyRequest().authenticated()
-                                .requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.POST,"/api/add-user").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/ud/**").hasRole("ADMIN")
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/ud/**").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+//                                .requestMatchers(HttpMethod.GET,"/api/profile/*").authenticated()
+
+
 
                 ).build();
     }
