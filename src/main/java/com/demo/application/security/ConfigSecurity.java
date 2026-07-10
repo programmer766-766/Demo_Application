@@ -17,11 +17,13 @@ public class ConfigSecurity {
                 .authorizeHttpRequests(
                         auth->auth
                                 .requestMatchers(HttpMethod.GET,"/api/profile/*").authenticated()
-                                .requestMatchers(HttpMethod.GET,"/api/ud/").hasRole("ADMIN").anyRequest().authenticated()
                                 .requestMatchers("/api/ud/**").authenticated()
                                 .requestMatchers(HttpMethod.POST,"/api/add-user").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated()
                                 .requestMatchers("/").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/ud/").hasRole("ADMIN").anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.GET,"/api/ud/").hasRole("ADMIN").anyRequest().authenticated()
+                                .requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated()
+
                 ).build();
     }
 
@@ -29,4 +31,5 @@ public class ConfigSecurity {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
