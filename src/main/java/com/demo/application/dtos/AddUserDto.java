@@ -7,10 +7,16 @@ import lombok.Data;
 @Data
 public class AddUserDto {
 
-    @NotBlank
+    @NotBlank(message = "fullName cannot be empty")
     private String fullName;
-    @Email
+    @Email(message = "email cannot be empty")
     private String email;
-    @NotBlank
+    @NotBlank(message = "city cannot be empty")
     private String city;
+    @NotBlank(message = "username cannot be empty")
+    private String username;
+    @NotBlank(message = "password cannot be empty")
+    private String password;
+    @NotBlank
+    private String role;
 }

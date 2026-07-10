@@ -27,4 +27,13 @@ public class UserEntity {
     @Column(name = "CITY")
     @Schema(name = "City",example = "Erode")
     private String city;
+    @OneToOne
+    @JoinColumn(name = "pan-id")
+    private PanEntity panId;
+    @Column(name = "USERNAME",unique = true)
+    private String userName;
+    @Column(name = "PASSWORD")
+    private String password;
+    @Column(name = "ROLE")
+    private String role;
 }
