@@ -3,7 +3,6 @@ package com.demo.application.security;
 import com.demo.application.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,23 +21,44 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class ConfigSecurity {
 
     private final JwtFilter jwtFilter;
-    public ConfigSecurity(JwtFilter jwtFilter){
-        this.jwtFilter=jwtFilter;
+
+    public ConfigSecurity(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        auth->auth
-                                .requestMatchers(HttpMethod.GET,"/api/profile/*").authenticated()
-                                .requestMatchers(HttpMethod.GET,"/api/ud/").hasRole("ADMIN").anyRequest().authenticated()
-                                .requestMatchers("/api/ud/**").authenticated()
-                                .requestMatchers(HttpMethod.POST,"/api/add-user").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated()
-                                .requestMatchers("/").permitAll()
-                ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/",
+                                "/api/add-user",
+                                "/api/auth",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+
+                        .requestMatchers("/admin/**")
+                        .hasRole("ADMIN")
+
+                        .anyRequest()
+                        .authenticated()
+                )
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                .httpBasic(AbstractHttpConfigurer::disable)
+
+                .addFilterBefore(
+                        jwtFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
+
+                .build();
     }
 
     @Bean
@@ -47,14 +67,22 @@ public class ConfigSecurity {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+    public AuthenticationProvider authenticationProvider(
+            UserDetailsService userDetailsService) {
+
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider(userDetailsService);
+
         provider.setPasswordEncoder(bCryptPasswordEncoder());
+
         return provider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

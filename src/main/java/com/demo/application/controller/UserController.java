@@ -10,7 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +23,11 @@ public class UserController {
 
     private final UserService userService;
     private final JwtService jwtService;
-    public UserController(UserService userService,JwtService jwtService){
+    private final AuthenticationManager authenticationManager;
+    public UserController(UserService userService,JwtService jwtService,AuthenticationManager authenticationManager){
         this.userService=userService;
         this.jwtService=jwtService;
+        this.authenticationManager=authenticationManager;
     }
 @ApiResponses(value = {
         @ApiResponse(responseCode = "201",description = "successfully posted")
@@ -58,14 +62,28 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<AuthResponseDto> authenticateUser(@Valid@RequestBody AuthRequestDto authRequestDto){
-        UsernamePasswordAuthenticationToken authenticationToken=
-                new UsernamePasswordAuthenticationToken(authRequestDto.getSubject(),authRequestDto.getPassword());
-        //generate token if authentication is valid
-        if(authenticationToken.isAuthenticated()){
-            String token= jwtService.generateToken(authRequestDto.getSubject());
-            return ResponseEntity.ok(new AuthResponseDto(authRequestDto.getSubject(),token));
+    public ResponseEntity<AuthResponseDto> authenticateUser(
+            @Valid @RequestBody AuthRequestDto authRequestDto) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authRequestDto.getSubject(),
+                        authRequestDto.getPassword()
+                )
+        );
+
+        if (authentication.isAuthenticated()) {
+
+            String token = jwtService.generateToken(authRequestDto.getSubject());
+
+            return ResponseEntity.ok(
+                    new AuthResponseDto(
+                            authRequestDto.getSubject(),
+                            token
+                    )
+            );
         }
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
