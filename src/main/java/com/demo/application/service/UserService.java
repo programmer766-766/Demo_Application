@@ -6,6 +6,8 @@ import com.demo.application.entity.UserEntity;
 import com.demo.application.repo.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -33,8 +35,7 @@ public class UserService {
     //method is for view user profile by their given name
     public UserProfileDto userProfile(int id){
         //Fetch user into DB by their input name
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new
-                RuntimeException("User is not available with this name:" + id));
+        UserEntity userEntity = userRepository.getUser(id);
         //if user exists map their details into UserProfileDto
         UserProfileDto userProfileDto=new UserProfileDto();
         userProfileDto.setProfileId(userEntity.getUserId());
@@ -43,5 +44,10 @@ public class UserService {
         userProfileDto.setCity(userEntity.getCity());
 
         return userProfileDto;
+    }
+
+    //fetch all users using jpql
+    public List<UserEntity> fetchAllUsers(){
+        return userRepository.getAllUsers();
     }
 }

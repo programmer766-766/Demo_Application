@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -28,5 +30,9 @@ public class UserController {
     @GetMapping("/profile/{id}")
     public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable int id){
         return ResponseEntity.ok(userService.userProfile(id));
+    }
+    @GetMapping("/users")
+    public ResponseEntity<List<UserEntity>> fetchAllUsers(){
+        return ResponseEntity.ok(userService.fetchAllUsers());
     }
 }
